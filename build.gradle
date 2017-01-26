@@ -1,0 +1,46 @@
+buildscript {
+	repositories {
+		// mavenLocal()
+		mavenCentral()
+		jcenter()
+		// maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+	}
+
+	dependencies {
+		classpath 'org.anarres.gradle:gradle-stdproject-plugin:1.0.7'
+	}
+}
+
+apply plugin: 'org.anarres.stdproject'
+stdproject {
+}
+
+subprojects {
+	group = "org.anarres.misc"
+
+	apply plugin: 'org.anarres.stdmodule'
+	stdmodule {
+		description "Miscellaneous code."
+		author id: 'shevek', name: 'Shevek', email: 'github@anarres.org'
+	}
+
+	ext {
+		springVersion = "4.3.4.RELEASE"
+	}
+
+	configurations {
+		compile.exclude group: 'commons-logging'
+		compile.exclude group: 'log4j'				// Breaks JCL, introduced by Hive and others
+		compile.exclude group: "org.slf4j", module: 'slf4j-log4j12'	// Bad cycle.
+	}
+
+	dependencies {
+		// testCompile "org.springframework:spring-test:${springVersion}"
+	}
+
+	sourceCompatibility = 1.7
+	animalsniffer {
+		signature = "org.codehaus.mojo.signature:java17:+@signature"
+		skip = true
+	}
+}
